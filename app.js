@@ -17,14 +17,26 @@ const converter = new Convert({
   stream: false,
 });
 
-function updateStats(source) {
+function lineCount(source) {
   if (!source.trim()) {
+    return 0;
+  }
+  return source.replace(/\n$/, "").split("\n").length;
+}
+
+function updateStats(rawSource, preparedSource) {
+  if (!preparedSource.trim()) {
     stats.textContent = "0 lines";
     return;
   }
 
-  const lineCount = source.replace(/\n$/, "").split("\n").length;
-  stats.textContent = `${lineCount} lines`;
+  const preparedCount = lineCount(preparedSource);
+  const rawCount = lineCount(rawSource);
+  const changed = cleanToggle.checked && rawSource !== preparedSource;
+
+  stats.textContent = changed
+    ? `${preparedCount} lines (cleaned from ${rawCount})`
+    : `${preparedCount} lines`;
 }
 
 function stripBackspaces(source) {
@@ -44,12 +56,32 @@ function cleanupScriptArtifacts(source) {
   text = text
     .replace(/\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)/g, "")
     .replace(/\x1b\[\?\d{3,5}[hl]/g, "")
-    .replace(/\?\d{3,5}[hl]/g, "")
-    .replace(/^\]0;[^\n]*$/gm, "")
     .replace(/^Script (started|done) on.*$/gim, "")
-    .replace(/[\x00-\x08\x0b-\x1a\x1c-\x1f\x7f]/g, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+    .replace(/[\x00-\x08\x0b-\x1a\x1c-\x1f\x7f]/g, "");
+
+  const cleanedLines = text
+    .split("\n")
+    .map((line) => {
+      let out = line;
+
+      // Remove common script/readline leftovers that leak as raw text.
+      out = out.replace(/\?\d{3,5}[hl]/g, "");
+
+      // Remove title-setting residues in plain-text captures while preserving command text.
+      out = out.replace(/\]0;[^#$\n]*[#$]\s*/g, "");
+      out = out.replace(/\]0;[^\n]*\u0007/g, "");
+
+      // Remove lines that are only question-mark timestamps/control leftovers.
+      if (/^\s*\??\d+\]?\s*$/.test(out)) return "";
+
+      // Remove fully empty shell-title residue line.
+      if (/^\s*\]0;\s*$/.test(out)) return "";
+
+      return out;
+    })
+    .join("\n");
+
+  text = cleanedLines.replace(/\n{3,}/g, "\n\n").trim();
 
   return text;
 }
@@ -62,7 +94,7 @@ function renderAnsi(source = input.value) {
     : '<span class="hint">Nothing to render yet. Paste script output above.</span>';
 
   preview.innerHTML = safe;
-  updateStats(prepared);
+  updateStats(raw, prepared);
 }
 
 function clearAll() {
