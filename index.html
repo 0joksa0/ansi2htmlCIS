@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANSI2HTML Student Report Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <h1>ANSI2HTML</h1>
+        <p>Paste terminal output, render colorful HTML, review student submissions faster.</p>
+      </header>
+
+      <section class="controls">
+        <label for="input" class="label">ANSI output</label>
+        <textarea
+          id="input"
+          placeholder="Paste script output here..."
+          spellcheck="false"
+        ></textarea>
+
+        <div class="button-row">
+          <button id="renderBtn">Render Preview</button>
+          <button id="clearBtn" class="ghost">Clear</button>
+          <label class="file-btn">
+            Load .txt/.log
+            <input id="fileInput" type="file" accept=".txt,.log,.ansi,text/plain" />
+          </label>
+          <button id="downloadBtn" class="ghost">Download HTML</button>
+        </div>
+      </section>
+
+      <section class="output-wrap">
+        <div class="preview-header">
+          <h2>Preview</h2>
+          <span id="stats">0 lines</span>
+        </div>
+        <article id="preview" class="preview" aria-live="polite"></article>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

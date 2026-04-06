@@ -1,0 +1,152 @@
+:root {
+  --bg-0: #0c141c;
+  --bg-1: #121f2b;
+  --bg-2: #1b2b39;
+  --ink: #e6edf3;
+  --muted: #9fb2c6;
+  --accent: #29d3a8;
+  --border: #284055;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 15% 10%, #243f59 0%, transparent 28%),
+    radial-gradient(circle at 85% 95%, #1f4f40 0%, transparent 26%),
+    linear-gradient(160deg, var(--bg-0), var(--bg-1) 50%, #0f1823);
+}
+
+.app {
+  width: min(1100px, 92vw);
+  margin: 2rem auto;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.hero {
+  background: linear-gradient(140deg, rgba(41, 211, 168, 0.12), rgba(89, 184, 255, 0.1));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.hero p {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+.controls,
+.output-wrap {
+  background: rgba(8, 13, 19, 0.64);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 220px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #0e1821;
+  color: var(--ink);
+  padding: 0.9rem;
+  font: 0.86rem/1.4 "IBM Plex Mono", monospace;
+}
+
+.button-row {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+button,
+.file-btn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  font: 500 0.88rem "Space Grotesk", sans-serif;
+  cursor: pointer;
+}
+
+button,
+.file-btn {
+  background: linear-gradient(120deg, #20b890, #249cbf);
+  color: #071016;
+}
+
+button.ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--ink);
+}
+
+.file-btn input {
+  display: none;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+
+.preview-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+#stats {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.preview {
+  background: #101922;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem;
+  min-height: 280px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 0.86rem/1.45 "IBM Plex Mono", monospace;
+}
+
+.hint {
+  color: var(--muted);
+}
+
+@media (max-width: 700px) {
+  .app {
+    width: 94vw;
+    margin: 1rem auto;
+  }
+
+  textarea,
+  .preview {
+    min-height: 210px;
+  }
+}
