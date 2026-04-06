@@ -81,6 +81,22 @@ textarea {
   gap: 0.6rem;
 }
 
+.options {
+  margin-top: 0.65rem;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.toggle input {
+  accent-color: var(--accent);
+}
+
 button,
 .file-btn {
   border: 1px solid transparent;

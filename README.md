@@ -8,6 +8,7 @@ Built for reviewing student assignment logs and script outputs.
 - Paste terminal/script output directly
 - Load `.txt`, `.log`, `.ansi` files
 - ANSI to HTML conversion using `ansi-to-html`
+- Auto-cleanup for common `script` noise (`?2004h`, title residues, `Script started/done`)
 - Instant preview with colorized output
 - Download final report as standalone HTML
 

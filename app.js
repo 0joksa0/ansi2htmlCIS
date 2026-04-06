@@ -7,6 +7,7 @@ const renderBtn = document.getElementById("renderBtn");
 const clearBtn = document.getElementById("clearBtn");
 const downloadBtn = document.getElementById("downloadBtn");
 const fileInput = document.getElementById("fileInput");
+const cleanToggle = document.getElementById("cleanToggle");
 
 const converter = new Convert({
   fg: "#e6edf3",
@@ -26,14 +27,42 @@ function updateStats(source) {
   stats.textContent = `${lineCount} lines`;
 }
 
+function stripBackspaces(source) {
+  let text = source;
+  while (/[^\n]\x08/.test(text)) {
+    text = text.replace(/[^\n]\x08/g, "");
+  }
+  return text.replace(/\x08/g, "");
+}
+
+function cleanupScriptArtifacts(source) {
+  let text = source;
+
+  text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  text = stripBackspaces(text);
+
+  text = text
+    .replace(/\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)/g, "")
+    .replace(/\x1b\[\?\d{3,5}[hl]/g, "")
+    .replace(/\?\d{3,5}[hl]/g, "")
+    .replace(/^\]0;[^\n]*$/gm, "")
+    .replace(/^Script (started|done) on.*$/gim, "")
+    .replace(/[\x00-\x08\x0b-\x1a\x1c-\x1f\x7f]/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return text;
+}
+
 function renderAnsi(source = input.value) {
   const raw = source || "";
-  const safe = raw.trim()
-    ? converter.toHtml(raw)
+  const prepared = cleanToggle.checked ? cleanupScriptArtifacts(raw) : raw;
+  const safe = prepared.trim()
+    ? converter.toHtml(prepared)
     : '<span class="hint">Nothing to render yet. Paste script output above.</span>';
 
   preview.innerHTML = safe;
-  updateStats(raw);
+  updateStats(prepared);
 }
 
 function clearAll() {
@@ -81,6 +110,7 @@ clearBtn.addEventListener("click", clearAll);
 downloadBtn.addEventListener("click", downloadHtml);
 
 input.addEventListener("input", () => renderAnsi());
+cleanToggle.addEventListener("change", () => renderAnsi());
 
 fileInput.addEventListener("change", async (event) => {
   const file = event.target.files?.[0];
